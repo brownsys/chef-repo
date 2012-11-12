@@ -21,7 +21,9 @@ template "/etc/default/nfs-common" do
             })
 end
 
-template "/etc/fstab" do
-  source "fstab.erb"
-  variables( :new_mount => "euc-nat:/  /mnt  nfs4  _netdev,auto  0  0" )
+mount "/mnt" do
+  device "euc-nat:/"
+  fstype "nfs4"
+  options "_netdev,auto"
+  action [:mount, :enable]
 end

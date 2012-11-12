@@ -1,7 +1,0 @@
-# Created by Chef
-# /etc/default/nfs-common
-
-NEED_STATD=<%= @need_statd %>
-STATDOPTS=<%= @statdops %>
-NEED_GSSD=<%= @need_gssd %>
-NEED_IDMAPD=<%= @need_idmapd %>
