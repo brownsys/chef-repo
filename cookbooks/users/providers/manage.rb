@@ -95,6 +95,7 @@ action :create do
 
         template "/etc/profile.d/chef-profile.sh" do
           source "chef-profile.erb"
+          mode 0755
           if u['editor']
             variables :editor => u['editor']
           else
