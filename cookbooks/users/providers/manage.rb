@@ -93,6 +93,15 @@ action :create do
           mode "0700"
         end
 
+        template "#{home_dir}/.profile" do
+          source "profile.erb"
+          if u['editor']
+            variables :editor => u['editor']
+          else
+            variables :editor => "emacs"
+          end
+        end
+
         if u['ssh_keys']
           template "#{home_dir}/.ssh/authorized_keys" do
             source "authorized_keys.erb"
