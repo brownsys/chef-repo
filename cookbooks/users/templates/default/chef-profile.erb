@@ -1,0 +1,6 @@
+# Attach user's nfs directory at login.
+if [ ! -d $HOME/nfs ] ; then
+    ln -s /mnt/nfs-euc/$USER $HOME/nfs
+fi
+
+export EDITOR=<%= @editor %>

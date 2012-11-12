@@ -93,8 +93,8 @@ action :create do
           mode "0700"
         end
 
-        template "#{home_dir}/.profile" do
-          source "profile.erb"
+        template "/etc/profile.d/chef-profile.sh" do
+          source "chef-profile.erb"
           if u['editor']
             variables :editor => u['editor']
           else
