@@ -119,13 +119,11 @@ action :create do
         template "#{home_dir}/.bashrc" do
           mode "0644"
           source "bashrc.erb"
-          only_if "test -f examples.desktop"
         end
 
         template "#{home_dir}/.profile" do
           mode "0644"
           source "profile.erb"
-          only_if "test -f examples.desktop"
         end
 
 
