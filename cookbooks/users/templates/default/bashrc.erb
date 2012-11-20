@@ -105,3 +105,14 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
+
+# Setup nfs mount in homedir
+if [ ! -d $HOME/nfs ] ; then
+    ln -s /mnt/nfs-euc/$USER $HOME/nfs
+fi
+
+# Include hadoop environment, if it exists.
+if [ -f $HOME/nfs/.environment-hadoop ]; then
+    . $HOME/nfs/.environment-hadoop
+fi
+
