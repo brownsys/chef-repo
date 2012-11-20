@@ -116,16 +116,17 @@ action :create do
           end
         end
 
-        template "#{home_dir}/.bashrc" do
-          mode "0644"
-          source "bashrc.erb"
-        end
+        if u['profiles'] != "keep"
+          template "#{home_dir}/.bashrc" do
+            mode "0644"
+            source "bashrc.erb"
+          end
 
-        template "#{home_dir}/.profile" do
-          mode "0644"
-          source "profile.erb"
+          template "#{home_dir}/.profile" do
+            mode "0644"
+            source "profile.erb"
+          end
         end
-
 
       end
     end
