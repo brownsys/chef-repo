@@ -31,6 +31,18 @@ action :remove do
       user rm_user['id'] do
         action :remove
       end
+
+      if u['home']
+        directory u['home'] do
+          recursive true
+          action :delete
+        end
+      else
+        directory "/home/#{u['id']}" do
+          recursive true
+          action :delete
+        end
+      end
     end
     new_resource.updated_by_last_action(true)
   end
