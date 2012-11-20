@@ -32,13 +32,13 @@ action :remove do
         action :remove
       end
 
-      if u['home']
-        directory u['home'] do
+      if rm_user['home']
+        directory rm_user['home'] do
           recursive true
           action :delete
         end
       else
-        directory "/home/#{u['id']}" do
+        directory "/home/#{rm_user['id']}" do
           recursive true
           action :delete
         end
