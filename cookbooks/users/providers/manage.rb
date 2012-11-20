@@ -45,6 +45,16 @@ action :create do
     search(new_resource.data_bag, "groups:#{new_resource.search_group} AND NOT action:remove") do |u|
       security_group << u['id']
 
+      template "/etc/skel/.bashrc" do
+        source "bashrc.erb"
+        mode 644
+      end
+
+      template "/etc/skel/.profile" do
+        source "profile.erb"
+        mode 644
+      end
+
       if node['apache'] and node['apache']['allowed_openids']
         Array(u['openid']).compact.each do |oid|
           node['apache']['allowed_openids'] << oid unless node['apache']['allowed_openids'].include?(oid)
@@ -91,16 +101,6 @@ action :create do
           owner u['id']
           group u['gid'] || u['id']
           mode "0700"
-        end
-
-        template "/etc/profile.d/chef-profile.sh" do
-          source "chef-profile.erb"
-          mode 0755
-          if u['editor']
-            variables :editor => u['editor']
-          else
-            variables :editor => "emacs"
-          end
         end
 
         if u['ssh_keys']
