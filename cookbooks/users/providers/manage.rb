@@ -77,6 +77,7 @@ action :create do
       if u['gid'] and u['gid'].kind_of?(Numeric)
         group u['id'] do
           gid u['gid']
+          not_if "grep #{u['id']} /etc/passwd"
         end
       end
 
