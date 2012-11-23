@@ -26,4 +26,5 @@ mount "/mnt" do
   fstype "nfs4"
   options "_netdev,auto"
   action [:mount, :enable]
+  not_if "test -d /mnt/nfs-euc"
 end

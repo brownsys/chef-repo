@@ -96,6 +96,7 @@ action :create do
           supports :manage_home => true
         end
         home home_dir
+        not_if "grep #{u['id']} /etc/passwd"
       end
 
       if home_dir != "/dev/null"
@@ -103,6 +104,7 @@ action :create do
           owner u['id']
           group u['gid'] || u['id']
           mode "0700"
+          not_if "grep #{u['id']} /etc/passwd"
         end
 
         if u['ssh_keys']
@@ -116,16 +118,16 @@ action :create do
           end
         end
 
-        if u['profiles'] != "keep"
-          template "#{home_dir}/.bashrc" do
-            mode "0644"
-            source "bashrc.erb"
-          end
+        template "#{home_dir}/.bashrc" do
+          mode "0644"
+          source "bashrc.erb"
+          not_if "grep #{u['id']} /etc/passwd"
+        end
 
-          template "#{home_dir}/.profile" do
-            mode "0644"
-            source "profile.erb"
-          end
+        template "#{home_dir}/.profile" do
+          mode "0644"
+          source "profile.erb"
+          not_if "grep #{u['id']} /etc/passwd"        
         end
 
       end
