@@ -105,7 +105,6 @@ action :create do
           owner u['id']
           group u['gid'] || u['id']
           mode "0700"
-          not_if "grep #{u['id']} /etc/passwd"
         end
 
         if u['ssh_keys']
