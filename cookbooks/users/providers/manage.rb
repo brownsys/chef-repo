@@ -70,15 +70,24 @@ action :create do
       else
         home_dir = "/home/#{u['id']}"
       end
-
+      
       # The user block will fail if the group does not yet exist.
       # See the -g option limitations in man 8 useradd for an explanation.
       # This should correct that without breaking functionality.
       if u['gid'] and u['gid'].kind_of?(Numeric)
         group u['id'] do
           gid u['gid']
-          not_if "grep #{u['id']} /etc/passwd"
+          not_if "grep #{u['id']}: /etc/passwd"
         end
+      end
+
+      # Does the user already exist?
+      grep = Chef::ShellOut.new("grep #{u['id']}: /etc/passwd")
+      grep.run_command
+      if grep.stdout["#{u['id']}"]
+        exists = true
+      else
+        exists = false
       end
 
       # Create user object.
@@ -97,7 +106,9 @@ action :create do
           supports :manage_home => true
         end
         home home_dir
-        not_if "grep #{u['id']} /etc/passwd"
+        not_if do
+          exists
+        end
       end
 
       if home_dir != "/dev/null"
@@ -121,13 +132,42 @@ action :create do
         template "#{home_dir}/.bashrc" do
           mode "0644"
           source "bashrc.erb"
-          not_if "grep #{u['id']} /etc/passwd"
+          not_if do
+            exists
+          end
         end
 
         template "#{home_dir}/.profile" do
           mode "0644"
           source "profile.erb"
-          not_if "grep #{u['id']} /etc/passwd"        
+          not_if do
+            exists
+          end
+        end
+
+        if u['sudo']
+          cmds_exist = true
+          user_cmds = ""
+          u['sudo'].each do |cmd|
+            user_cmds += cmd + ", "
+          end
+          user_cmds = user_cmds[0,user_cmds.length-2]
+        else
+          cmds_exist = false
+        end
+
+        template "/etc/sudoers.d/#{u['id']}" do
+          source "sudoers_d.erb"
+          mode 0440
+          owner "root"
+          group "root"
+          variables({
+                      :user => u['id'],
+                      :cmds => user_cmds
+                    })
+          only_if do
+            cmds_exist
+          end
         end
 
       end
