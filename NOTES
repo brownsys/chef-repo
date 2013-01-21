@@ -1,0 +1,27 @@
+Creating/installing Chef cookbooks on euc
+-----------
+* check out chef-repo on local machine
+* install chef-client on local machine
+  - sudo gem install chef --no-ri --no-rdoc
+* check out our chef-repo from git (local machine)
+* knife configure
+  - use defaults for everything except for chef-repo location, point it to the checked out copy of chef-repo
+* knife cookbook create
+  - make modifications and check in changes
+  - simple ntp example: http://wiki.opscode.com/display/chef/Guide+to+Creating+A+Cookbook+and+Writing+A+Recipe
+  - commit changes from local repo
+* pull changes on euc@eucboss
+  - knife cookbook upload <cookbook-name>
+* add cookbook to a specific node or role
+-  - knife role list (preferred method)
+    + knife role edit euc_node
+    + add cookbook name to run_list in similar format as others
+  - knife node list
+    + knife node edit eucXX.euc.smn.cs.brown.edu
+    + add cookbook name to run_list in similar format as others
+* wait for the next chef install period, roughly every 30min
+  - also you can check if the install is okay by restarting the chef-client on any node:
+    + sudo service chef-client restart
+    + then check the chef-client logs, should be at /var/log/chef/client.log
+    + you should see your cookbook's name somewhere in here
+  - I think there's a way to force a restart on all nodes, I can't remember how at the moment
