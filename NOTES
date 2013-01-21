@@ -33,4 +33,4 @@ Creating/installing Chef cookbooks on euc
     + sudo service chef-client restart
     + then check the chef-client logs, should be at /var/log/chef/client.log
     + you should see your cookbook's name somewhere in here, near the bottom
-  - I think there's a way to force a restart on all nodes, I can't remember how at the moment
+  - Use 'pusher' to restart the chef-client service on all the nodes
