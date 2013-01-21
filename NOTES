@@ -1,27 +1,36 @@
 Creating/installing Chef cookbooks on euc
 -----------
-* check out chef-repo on local machine
-* install chef-client on local machine
+
+<Commands to be executed on local machine>
+* check out our chef-repo: git@github.com:brownsys/chef-repo.git
+* install chef-client
   - sudo gem install chef --no-ri --no-rdoc
-* check out our chef-repo from git (local machine)
 * knife configure
   - use defaults for everything except for chef-repo location, point it to the checked out copy of chef-repo
-* knife cookbook create
+* knife cookbook create <cookbook-name>
+  - browse to chef-repo/cookbooks/<cookbook-name>
   - make modifications and check in changes
   - simple ntp example: http://wiki.opscode.com/display/chef/Guide+to+Creating+A+Cookbook+and+Writing+A+Recipe
-  - commit changes from local repo
+  - commit/push local changes to remote
+
+<Commands to be executed on eucboss>
 * pull changes on euc@eucboss
-  - knife cookbook upload <cookbook-name>
+  - ~/chef-repo/
+* knife cookbook upload <cookbook-name>
+  - this adds the new cookbook to the chef-server
+  - verify it now exists with, 'knife cookbook list'
 * add cookbook to a specific node or role
--  - knife role list (preferred method)
-    + knife role edit euc_node
+  - 'knife role list', shows all current roles
+  - 'knife role show <role name>', shows more info about this role
+  - Add the new cook to role 'euc_node' with: 'knife role edit euc_node'
     + add cookbook name to run_list in similar format as others
-  - knife node list
-    + knife node edit eucXX.euc.smn.cs.brown.edu
-    + add cookbook name to run_list in similar format as others
+  - OR you can add the cookbook only to a specific node:
+  - 'knife node list', shows all nodes registered with chef
+    + 'knife node show eucXX.euc.smn.cs.brown.edu', more info about this node and its recipes/roles
+    + 'knife node edit eucXX.euc.smn.cs.brown.edu', add your cookbook to the run_list
 * wait for the next chef install period, roughly every 30min
   - also you can check if the install is okay by restarting the chef-client on any node:
     + sudo service chef-client restart
     + then check the chef-client logs, should be at /var/log/chef/client.log
-    + you should see your cookbook's name somewhere in here
+    + you should see your cookbook's name somewhere in here, near the bottom
   - I think there's a way to force a restart on all nodes, I can't remember how at the moment
